@@ -37,7 +37,7 @@ class XBotLCfg(LeggedRobotCfg):
     """
     class env(LeggedRobotCfg.env):
         # change the observation dim
-        frame_stack = 10
+        frame_stack = 15
         c_frame_stack = 3
         num_single_obs = 47
         num_observations = int(frame_stack * num_single_obs)
@@ -55,13 +55,13 @@ class XBotLCfg(LeggedRobotCfg):
         torque_limit = 0.85
 
     class asset(LeggedRobotCfg.asset):
-        file = '{LEGGED_GYM_ROOT_DIR}/resources/robots/orcai_description/urdf/orca_description_mj.urdf'
+        file = '{LEGGED_GYM_ROOT_DIR}/resources/robots/XBot/urdf/XBot-L.urdf'
 
-        name = "orca"
+        name = "XBot-L"
         foot_name = "ankle_roll"
         knee_name = "knee"
 
-        terminate_after_contacts_on = ['base_link', 'r_knee_link', 'r_knee_link']
+        terminate_after_contacts_on = ['base_link']
         penalize_contacts_on = ["base_link"]
         self_collisions = 0  # 1 to disable, 0 to enable...bitwise filter
         flip_visual_attachments = False
@@ -98,36 +98,34 @@ class XBotLCfg(LeggedRobotCfg):
             height_measurements = 0.1
 
     class init_state(LeggedRobotCfg.init_state):
-        pos = [0.0, 0.0, 0.7]
+        pos = [0.0, 0.0, 0.95]
 
         default_joint_angles = {  # = target angles [rad] when action = 0.0
-
-            'r_hip_pitch_joint': 0.0,
-            'r_hip_roll_joint': 0.0,
-            'r_hip_yaw_joint': 0.0,
-            'r_knee_joint': 0.0,
-            'r_ankle_pitch_joint': 0.0,
-            'r_ankle_roll_joint': 0.0,
-            
-            'l_hip_pitch_joint': 0.0,
-            'l_hip_roll_joint': 0.0,
-            'l_hip_yaw_joint': 0.0,
-            'l_knee_joint': 0.0,
-            'l_ankle_pitch_joint': 0.0,
-            'l_ankle_roll_joint': 0.0,
+            'left_leg_roll_joint': 0.,
+            'left_leg_yaw_joint': 0.,
+            'left_leg_pitch_joint': 0.,
+            'left_knee_joint': 0.,
+            'left_ankle_pitch_joint': 0.,
+            'left_ankle_roll_joint': 0.,
+            'right_leg_roll_joint': 0.,
+            'right_leg_yaw_joint': 0.,
+            'right_leg_pitch_joint': 0.,
+            'right_knee_joint': 0.,
+            'right_ankle_pitch_joint': 0.,
+            'right_ankle_roll_joint': 0.,
         }
 
     class control(LeggedRobotCfg.control):
         # PD Drive parameters:
-        stiffness = {'hip_roll': 50.0, 'hip_pitch': 75.0, 'hip_yaw': 50.0,
-                     'knee': 75.0, 'ankle_pitch': 30, 'ankle_roll': 15}
-        damping = {'hip_roll': 3, 'hip_pitch': 6, 'hip_yaw':3,
-                   'knee': 6, 'ankle_pitch': 2, 'ankle_roll': 1}
+        stiffness = {'leg_roll': 200.0, 'leg_pitch': 350.0, 'leg_yaw': 200.0,
+                     'knee': 350.0, 'ankle': 15}
+        damping = {'leg_roll': 10, 'leg_pitch': 10, 'leg_yaw':
+                   10, 'knee': 10, 'ankle': 10}
 
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.25
         # decimation: Number of control action updates @ sim DT per policy DT
-        decimation = 20  # 100hz
+        decimation = 10  # 100hz
 
     class sim(LeggedRobotCfg.sim):
         dt = 0.001  # 1000 Hz
@@ -168,24 +166,24 @@ class XBotLCfg(LeggedRobotCfg):
         heading_command = True  # if true: compute ang vel command from heading error
 
         class ranges:
-            lin_vel_x = [-0.8, 1.0]   # min max [m/s]
-            lin_vel_y = [-0.6, 0.6]   # min max [m/s]
-            ang_vel_yaw = [-0.6, 0.6] # min max [rad/s]
+            lin_vel_x = [-0.3, 0.6]   # min max [m/s]
+            lin_vel_y = [-0.3, 0.3]   # min max [m/s]
+            ang_vel_yaw = [-0.3, 0.3] # min max [rad/s]
             heading = [-3.14, 3.14]
 
     class rewards:
-        base_height_target = 0.7
-        min_dist = 0.4
-        max_dist = 0.7
+        base_height_target = 0.89
+        min_dist = 0.2
+        max_dist = 0.5
         # put some settings here for LLM parameter tuning
-        target_joint_pos_scale = 0.30    # rad
-        target_feet_height = 0.15        # m
-        cycle_time = 1.0                # sec
+        target_joint_pos_scale = 0.17    # rad
+        target_feet_height = 0.06        # m
+        cycle_time = 0.64                # sec
         # if true negative total rewards are clipped at zero (avoids early termination problems)
         only_positive_rewards = True
         # tracking reward = exp(error*sigma)
         tracking_sigma = 5
-        max_contact_force = 1500 # Forces above this value are penalized
+        max_contact_force = 700  # Forces above this value are penalized
 
         class scales:
             # reference motion tracking

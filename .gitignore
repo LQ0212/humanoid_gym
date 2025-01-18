@@ -22,7 +22,7 @@ test_data/
 
 # Package files
 *.jar
-
+*.STL
 # Maven
 target/
 dist/

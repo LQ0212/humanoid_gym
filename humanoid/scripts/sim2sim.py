@@ -177,16 +177,17 @@ if __name__ == '__main__':
 
         class sim_config:
             if args.terrain:
-                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/XBot/mjcf/XBot-L-terrain.xml'
+                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/orcai_description/mjcf/scene.xml'
             else:
-                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/XBot/mjcf/XBot-L.xml'
+                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/orcai_description/mjcf/scene.xml'
+                # mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/XBot/mjcf/XBot-L.xml'
             sim_duration = 60.0
             dt = 0.001
-            decimation = 10
+            decimation = 20
 
         class robot_config:
-            kps = np.array([200, 200, 350, 350, 15, 15, 200, 200, 350, 350, 15, 15], dtype=np.double)
-            kds = np.array([10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10], dtype=np.double)
+            kps = np.array([50, 75, 50, 75, 30, 15, 50, 75, 50, 75, 30, 15], dtype=np.double)
+            kds = np.array([3, 6, 3, 6, 2, 1, 3, 6, 3, 6, 2, 1], dtype=np.double)
             tau_limit = 200. * np.ones(12, dtype=np.double)
 
     policy = torch.jit.load(args.load_model)
