@@ -36,7 +36,9 @@ from .base.legged_robot import LeggedRobot
 from .custom.humanoid_config import XBotLCfg, XBotLCfgPPO
 from .custom.humanoid_env import XBotLFreeEnv
 
+from .custom.test_config import test_config, test_configPPO
+from .custom.test_env import test_env
 from humanoid.utils.task_registry import task_registry
 
 
-task_registry.register( "humanoid_ppo", XBotLFreeEnv, XBotLCfg(), XBotLCfgPPO() )
+task_registry.register( "TestRobot", test_env, test_config(), XBotLCfgPPO() )

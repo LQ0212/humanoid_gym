@@ -37,7 +37,7 @@ class XBotLCfg(LeggedRobotCfg):
     """
     class env(LeggedRobotCfg.env):
         # change the observation dim
-        frame_stack = 10
+        frame_stack = 15
         c_frame_stack = 3
         num_single_obs = 47
         num_observations = int(frame_stack * num_single_obs)
@@ -160,6 +160,7 @@ class XBotLCfg(LeggedRobotCfg):
         # dynamic randomization
         action_delay = 0.5
         action_noise = 0.02
+        
 
     class commands(LeggedRobotCfg.commands):
         # Vers: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
@@ -178,14 +179,14 @@ class XBotLCfg(LeggedRobotCfg):
         min_dist = 0.4
         max_dist = 0.7
         # put some settings here for LLM parameter tuning
-        target_joint_pos_scale = 0.30    # rad
+        target_joint_pos_scale = 0.50    # rad
         target_feet_height = 0.15        # m
         cycle_time = 1.0                # sec
         # if true negative total rewards are clipped at zero (avoids early termination problems)
         only_positive_rewards = True
         # tracking reward = exp(error*sigma)
         tracking_sigma = 5
-        max_contact_force = 1500 # Forces above this value are penalized
+        max_contact_force = 1500. # Forces above this value are penalized
 
         class scales:
             # reference motion tracking
@@ -194,21 +195,21 @@ class XBotLCfg(LeggedRobotCfg):
             feet_contact_number = 1.2
             # gait
             feet_air_time = 1.
-            foot_slip = -0.05
+            foot_slip = -0.1
             feet_distance = 0.2
             knee_distance = 0.2
             # contact
             feet_contact_forces = -0.01
             # vel tracking
-            tracking_lin_vel = 1.2
-            tracking_ang_vel = 1.1
+            tracking_lin_vel = 2.
+            tracking_ang_vel = 1.5
             vel_mismatch_exp = 0.5  # lin_z; ang x,y
             low_speed = 0.2
             track_vel_hard = 0.5
             # base pos
-            default_joint_pos = 0.5
-            orientation = 1.
-            base_height = 0.2
+            default_joint_pos = 2.
+            orientation = 3.
+            base_height = 1.
             base_acc = 0.2
             # energy
             action_smoothness = -0.002
@@ -216,6 +217,7 @@ class XBotLCfg(LeggedRobotCfg):
             dof_vel = -5e-4
             dof_acc = -1e-7
             collision = -1.
+            
 
     class normalization:
         class obs_scales:
@@ -230,13 +232,13 @@ class XBotLCfg(LeggedRobotCfg):
 
 
 class XBotLCfgPPO(LeggedRobotCfgPPO):
-    seed = 5
+    seed = -1
     runner_class_name = 'OnPolicyRunner'   # DWLOnPolicyRunner
 
     class policy:
         init_noise_std = 1.0
-        actor_hidden_dims = [512, 256, 128]
-        critic_hidden_dims = [768, 256, 128]
+        actor_hidden_dims = [256, 256, 128]
+        critic_hidden_dims = [256, 256, 128]
 
     class algorithm(LeggedRobotCfgPPO.algorithm):
         entropy_coef = 0.001
@@ -249,8 +251,8 @@ class XBotLCfgPPO(LeggedRobotCfgPPO):
     class runner:
         policy_class_name = 'ActorCritic'
         algorithm_class_name = 'PPO'
-        num_steps_per_env = 60  # per iteration
-        max_iterations = 3001  # number of policy updates
+        num_steps_per_env = 24  # per iteration
+        max_iterations = 20000  # number of policy updates
 
         # logging
         save_interval = 100  # Please check for potential savings every `save_interval` iterations.

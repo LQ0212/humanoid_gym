@@ -22,8 +22,8 @@ URDF_FILENAME = "urdf/orca_description_mj.urdf"
 rrobot = RobotWrapper.BuildFromURDF(modelPath + URDF_FILENAME, [modelPath], pinocchio.JointModelFreeFlyer())  # Load URDF file
 rmodel = rrobot.model
  
-rightFoot = 'rleg_link6' # 修改左右脚名字
-leftFoot = 'lleg_link6'
+rightFoot = 'r_ankle_roll_link' # 修改左右脚名字
+leftFoot = 'l_ankle_roll_link'
  
 display = crocoddyl.MeshcatDisplay(
     rrobot, frameNames=[rightFoot, leftFoot]
@@ -62,14 +62,14 @@ print("--------------compute com--------------")
 for i in range(rrobot.model.nq-7):
     q0 = pinocchio.utils.zero(rrobot.model.nq)
     q0[6] = 1  # q.w
-    q0[2] = 0  # z
+    q0[2] = 0.15 # z
     q0[i+7] = 1
     display.display([q0])
   
 for i in range(rrobot.model.nq-7-6): #same time
     q0 = pinocchio.utils.zero(rrobot.model.nq)
     q0[6] = 1  # q.w
-    q0[2] = 0  # z
+    q0[2] = 0.15  # z
     q0[i+7] = 1
     q0[i+13] = 1
     display.display([q0])
@@ -83,7 +83,7 @@ for i in range(10000):
     sin_pos_r = sin_pos.copy()
  
     ref_dof_pos = np.zeros((1,12))
-    scale_1 = 0.30
+    scale_1 = 0.50
     scale_2 = 2 * scale_1
     # left foot stance phase set to default joint pos
     if sin_pos_l > 0 :
