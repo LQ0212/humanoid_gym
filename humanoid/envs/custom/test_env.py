@@ -461,10 +461,10 @@ class test_env(LeggedRobot):
         self.ctrl_hist_deque_short.append(self.actions.clone()*self.cfg.control.action_scale)
         self.ctrl_hist = torch.cat([t for t in self.ctrl_hist_deque_short],dim=1)
 
-        self.dof_pos_hist_deque_short.append(self.obs_buf[:, 23:35])
+        self.dof_pos_hist_deque_short.append(self.obs_buf[:, 23:37])
         self.dof_pos_hist = torch.cat([t for t in self.dof_pos_hist_deque_short],dim=1)
 
-        self.dof_vel_hist_deque_short.append(self.obs_buf[:, 35:47])
+        self.dof_vel_hist_deque_short.append(self.obs_buf[:, 37:51])
         self.dof_vel_hist = torch.cat([t for t in self.dof_vel_hist_deque_short],dim=1)
 
         self.base_ang_vel_hist_deque_short.append(self.obs_buf[:, 5:8])

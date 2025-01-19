@@ -41,4 +41,4 @@ from .custom.test_env import test_env
 from humanoid.utils.task_registry import task_registry
 
 
-task_registry.register( "TestRobot", test_env, test_config(), XBotLCfgPPO() )
+task_registry.register( "TestRobot", test_env, test_config, XBotLCfgPPO() )

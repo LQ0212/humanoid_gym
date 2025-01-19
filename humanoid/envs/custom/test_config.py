@@ -5,7 +5,7 @@ from gpugym.envs.base.legged_robot_config \
 class test_config(LeggedRobotCfg):
     class env(LeggedRobotCfg.env):
         num_envs = 4096
-        num_observations = 221
+        num_observations = 211
         num_actions = 14
         episode_length_s = 70
         num_history_short = 3
