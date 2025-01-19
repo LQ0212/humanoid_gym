@@ -373,9 +373,9 @@ class test_env(LeggedRobot):
             self.projected_gravity,                 # [3] Projected gravity
             # torch.sin(2*torch.pi*self.phase),       # [1] Phase variable
             # torch.cos(2*torch.pi*self.phase),       # [1] Phase variable
-            self.actions*self.cfg.control.action_scale * 0., # [12] Joint actions
-            self.dof_pos,                           # [12] Joint states
-            self.dof_vel,                           # [12] Joint velocities
+            self.actions*self.cfg.control.action_scale * 0., # [14] Joint actions
+            self.dof_pos,                           # [14] Joint states
+            self.dof_vel,                           # [14] Joint velocities
             # in_contact,                             # [2] Contact states
             ####################################################################
             self.base_ang_vel_hist,                 # [9] Base angular velocity history
@@ -400,9 +400,9 @@ class test_env(LeggedRobot):
         # noise_vec[0] = noise_scales.base_z * self.obs_scales.base_z
         noise_vec[5:8] = noise_scales.ang_vel
         noise_vec[8:11] = noise_scales.gravity
-        noise_vec[11:23] = 0. # actions
-        noise_vec[23:35] = noise_scales.dof_pos
-        noise_vec[35:47] = noise_scales.dof_vel
+        noise_vec[11:25] = 0. # actions
+        noise_vec[25:37] = noise_scales.dof_pos
+        noise_vec[37:49] = noise_scales.dof_vel
         # noise_vec[47:83] = 0 # ctrl hist
         # noise_vec[83:119] = noise_scales.dof_pos
         # noise_vec[119:155] = noise_scales.dof_vel
@@ -1269,17 +1269,17 @@ class test_env(LeggedRobot):
         error += self.sqrdexp(
             5.*(self.dof_pos[:, 7])
             / self.cfg.normalization.obs_scales.dof_pos)
-        # error += self.sqrdexp(
-        #     5.*(self.dof_pos[:, 12])
-        #     / self.cfg.normalization.obs_scales.dof_pos)
-        # error += self.sqrdexp(
-        #     5.*(self.dof_pos[:, 13])
-        #     / self.cfg.normalization.obs_scales.dof_pos)
+        error += self.sqrdexp(
+            5.*(self.dof_pos[:, 12])
+            / self.cfg.normalization.obs_scales.dof_pos)
+        error += self.sqrdexp(
+            5.*(self.dof_pos[:, 13])
+            / self.cfg.normalization.obs_scales.dof_pos)
         # Pitch joint symmetry
         # error += self.sqrdexp(
         #     ((self.dof_pos[:, 2] + self.dof_pos[:, 8]) / 2. - self.cfg.init_state.default_joint_angles['Joint-hip-r-pitch'])
         #     / self.cfg.normalization.obs_scales.dof_pos)
-        return error/4
+        return error/6
 
     def _reward_ankle_regularization(self):
         # Ankle joint regularization around 0
@@ -1288,7 +1288,7 @@ class test_env(LeggedRobot):
             (2.5*self.dof_pos[:, 5]) / self.cfg.normalization.obs_scales.dof_pos)
         error += self.sqrdexp(
             (2.5*self.dof_pos[:, 11]) / self.cfg.normalization.obs_scales.dof_pos)
-        return error / 2.
+        return error/2
     # Added Reward ---------------------------------------------
     def _reward_no_fly(self):
         # reward one-foot contact when moving

@@ -5,8 +5,8 @@ from gpugym.envs.base.legged_robot_config \
 class test_config(LeggedRobotCfg):
     class env(LeggedRobotCfg.env):
         num_envs = 4096
-        num_observations = 185
-        num_actions = 12
+        num_observations = 221
+        num_actions = 14
         episode_length_s = 70
         num_history_short = 3
 
@@ -79,6 +79,8 @@ class test_config(LeggedRobotCfg):
             'l_knee_joint': 0.0,
             'l_ankle_pitch_joint': 0.0,
             'l_ankle_roll_joint': 0.0,
+            'rarm_joint1': 0.0,
+            'larm_joint1': 0.0,
             
         }
 
@@ -97,8 +99,8 @@ class test_config(LeggedRobotCfg):
             'l_ankle_pitch_joint': [-0.3, 0.3],
             'l_ankle_roll_joint': [-0.3, 0.3],
                                     
-            # 'rarm_joint1': [-0.3,0.3],
-            # 'larm_joint1': [-0.3,0.3],
+            'rarm_joint1': [-0.3,0.3],
+            'larm_joint1': [-0.3,0.3],
 
         }
 
@@ -117,8 +119,8 @@ class test_config(LeggedRobotCfg):
             'l_ankle_pitch_joint': [-0.1, 0.1],
             'l_ankle_roll_joint': [-0.1, 0.1],
             
-            # 'rarm_joint1': [-0.1,0.1],
-            # 'larm_joint1': [-0.1,0.1],
+            'rarm_joint1': [-0.1,0.1],
+            'larm_joint1': [-0.1,0.1],
         }
 
     class control(LeggedRobotCfg.control):
@@ -139,8 +141,8 @@ class test_config(LeggedRobotCfg):
             'l_ankle_pitch_joint': 30.,
             'l_ankle_roll_joint': 15.,
             
-            # 'rarm_joint1': 75.,
-            # 'larm_joint1': 75.,
+            'rarm_joint1': 75.,
+            'larm_joint1': 75.,
         }
         damping = {
             'r_hip_pitch_joint': 6.,
@@ -157,8 +159,8 @@ class test_config(LeggedRobotCfg):
             'l_ankle_pitch_joint': 2.,
             'l_ankle_roll_joint': 1.,
         
-            # 'rarm_joint1': 6.,
-            # 'larm_joint1': 6.,
+            'rarm_joint1': 6.,
+            'larm_joint1': 6.,
         }
 
         action_scale = 1.0
