@@ -364,7 +364,7 @@ class test_env(LeggedRobot):
             0., self.commands[:, 2:3].double()).float()
         square_wave = torch.where(self.time_to_stand_still.unsqueeze(1) > self.static_delay, self.p5, 0.* self.smooth_sqr_wave(self.phase))
         self.obs_buf = torch.cat((
-            # base_z,                                 # [1] Base height *
+            base_z,                                 # [1] Base height *
             # self.base_lin_vel,                      # [3] Base linear velocity *
             self.commands[:, 0:4],                  # [4] Velocity commands
             square_wave,                            # [1] Contact schedule [;5]
@@ -1012,19 +1012,19 @@ class test_env(LeggedRobot):
                                    dtype=torch.float, device=self.device,
                                    requires_grad=False)
         # * additional buffer for last ctrl: whatever is actually used for PD control (which can be shifted compared to action)
-        self.ctrl_hist = torch.zeros(self.num_envs, self.num_actions*3,
+        self.ctrl_hist = torch.zeros(self.num_envs, self.num_actions*5,
                                      dtype=torch.float, device=self.device,
                                      requires_grad=False)
-        self.dof_pos_hist = torch.zeros(self.num_envs, self.num_dof*3,
+        self.dof_pos_hist = torch.zeros(self.num_envs, self.num_dof*5,
                                      dtype=torch.float, device=self.device,
                                      requires_grad=False)
-        self.dof_vel_hist = torch.zeros(self.num_envs, self.num_dof*3,
+        self.dof_vel_hist = torch.zeros(self.num_envs, self.num_dof*5,
                                      dtype=torch.float, device=self.device,
                                      requires_grad=False)
-        self.base_ang_vel_hist = torch.zeros(self.num_envs, 9,
+        self.base_ang_vel_hist = torch.zeros(self.num_envs, 15,
                                      dtype=torch.float, device=self.device,
                                      requires_grad=False)
-        self.proj_gravity_hist = torch.zeros(self.num_envs, 9,
+        self.proj_gravity_hist = torch.zeros(self.num_envs, 15,
                                      dtype=torch.float, device=self.device,
                                      requires_grad=False)
         self.commands = torch.zeros(self.num_envs,

@@ -5,20 +5,20 @@ from gpugym.envs.base.legged_robot_config \
 class test_config(LeggedRobotCfg):
     class env(LeggedRobotCfg.env):
         num_envs = 4096
-        num_observations = 211
+        num_observations = 308
         num_actions = 14
         episode_length_s = 70
-        num_history_short = 3
+        num_history_short = 5
 
     class terrain(LeggedRobotCfg.terrain):
         curriculum = False
         mesh_type =  'plane' # 'trimesh'
         measure_heights = False
-        static_friction = 0.1
-        dynamic_friction = 0.1
+        static_friction = 0.6
+        dynamic_friction = 0.6
 
     class commands(LeggedRobotCfg.commands):
-        curriculum = False
+        curriculum = True
         max_curriculum = 1.
         num_commands = 4
         resampling_time = 5.
@@ -32,15 +32,15 @@ class test_config(LeggedRobotCfg):
 
         class ranges:
             # TRAINING COMMAND RANGES #
-            lin_vel_x = [-1.5, 1.5]        # min max [m/s]
-            lin_vel_y = [-0.6, 0.6]   # min max [m/s]
-            ang_vel_yaw = [-1., 1.]     # min max [rad/s]
-            robot_height = [0.5, 1.]     # min max [scale]
+            lin_vel_x = [0.3, 1.0]        # min max [m/s]
+            lin_vel_y = [0.3, 0.6]   # min max [m/s]
+            ang_vel_yaw = [-0.6, 0.6]     # min max [rad/s]
+            robot_height = [0, 0]     # min max [scale]
 
     class init_state(LeggedRobotCfg.init_state):
         reset_mode = 'reset_to_range'
         penetration_check = False
-        pos = [0., 0., 0.75]        # x,y,z [m]  
+        pos = [0., 0., 0.65]        # x,y,z [m]  
         rot = [0.0, 0.0, 0.0, 1.0]  # x,y,z,w [quat]
         lin_vel = [0.0, 0.0, 0.0]   # x,y,z [m/s]
         ang_vel = [0.0, 0.0, 0.0]   # x,y,z [rad/s]
@@ -49,7 +49,7 @@ class test_config(LeggedRobotCfg):
         root_pos_range = [
             [0., 0.],
             [0., 0.],
-            [0.7, 0.7],      
+            [0.65, 0.65],      
             [-torch.pi/10, torch.pi/10],
             [-torch.pi/10, torch.pi/10],
             [-torch.pi/10, torch.pi/10]
@@ -66,18 +66,18 @@ class test_config(LeggedRobotCfg):
         ]
 
         default_joint_angles = {
-            'r_hip_pitch_joint': 0.0,
+            'r_hip_pitch_joint': -0.3,
             'r_hip_roll_joint': 0.0,
             'r_hip_yaw_joint': 0.0,
-            'r_knee_joint': 0.0,
-            'r_ankle_pitch_joint': 0.0,
+            'r_knee_joint': -0.6,
+            'r_ankle_pitch_joint': 0.3,
             'r_ankle_roll_joint': 0.0,
             
-            'l_hip_pitch_joint': 0.0,
+            'l_hip_pitch_joint': -0.3,
             'l_hip_roll_joint': 0.0,
             'l_hip_yaw_joint': 0.0,
-            'l_knee_joint': 0.0,
-            'l_ankle_pitch_joint': 0.0,
+            'l_knee_joint': -0.6,
+            'l_ankle_pitch_joint': 0.3,
             'l_ankle_roll_joint': 0.0,
             'rarm_joint1': 0.0,
             'larm_joint1': 0.0,
@@ -89,14 +89,14 @@ class test_config(LeggedRobotCfg):
             'r_hip_roll_joint': [-0.2, 0.2],
             'r_hip_yaw_joint': [-0.4, 0.4],
             'r_knee_joint': [-1.2, 0.0],
-            'r_ankle_pitch_joint': [-0.3, 0.3],
+            'r_ankle_pitch_joint': [-0.6, 0.6],
             'r_ankle_roll_joint': [-0.3, 0.3],
             
             'l_hip_pitch_joint': [-1.0, 2.0],
             'l_hip_roll_joint': [-0.2, 0.2],
             'l_hip_yaw_joint': [-0.4, 0.4],
             'l_knee_joint': [-1.2, 0.0],
-            'l_ankle_pitch_joint': [-0.3, 0.3],
+            'l_ankle_pitch_joint': [-0.6, 0.6],
             'l_ankle_roll_joint': [-0.3, 0.3],
                                     
             'rarm_joint1': [-0.3,0.3],
@@ -168,7 +168,7 @@ class test_config(LeggedRobotCfg):
         decimation = 20
 
     class domain_rand(LeggedRobotCfg.domain_rand):
-        randomize_friction = True
+        randomize_friction = False
         # friction_range = [0.5, 1.25]
         friction_range = [0.3, 3.]
 
@@ -176,35 +176,52 @@ class test_config(LeggedRobotCfg):
         randomize_base_mass = False
         added_mass_range = [-1., 1.]
 
-        randomize_all_mass = True
-        rd_mass_range = [0.5, 1.5]
+        randomize_all_mass = False
+        rd_mass_range = [0.95,1.05]
 
-        randomize_com = True
+        randomize_com = False
         rd_com_range = [-0.05, 0.05]
 
-        randomize_base_com = True
+        randomize_base_com = False
         rd_base_com_range = [-0.1, 0.1]
         
         
-        push_robots = True
+        push_robots = False
         push_interval_s = 2
         push_ratio= 0.4
         max_push_vel_xy = 0.5
         max_push_ang_vel = 0.4
 
-        random_pd = True
-        p_range = [0.7, 1.3]
-        d_range = [0.7, 1.3]
+        random_pd = False
+        p_range = [0.9, 1.1]
+        d_range = [0.9, 1.1]
 
-        random_damping = True
+        random_damping = False
         damping_range = [0.3, 4.0]
 
-        random_inertia = True
-        inertia_range = [0.7, 1.3]
+        random_inertia = False
+        inertia_range = [0.9, 1.1]
 
         comm_delay = False
         comm_delay_range = [0, 11] # will exclude the upper limit
+    class sim(LeggedRobotCfg.sim):
+        dt = 0.001  # 1000 Hz
+        substeps = 1
+        up_axis = 1  # 0 is y, 1 is z
 
+        class physx(LeggedRobotCfg.sim.physx):
+            num_threads = 10
+            solver_type = 1  # 0: pgs, 1: tgs
+            num_position_iterations = 4
+            num_velocity_iterations = 1
+            contact_offset = 0.01  # [m]
+            rest_offset = 0.0   # [m]
+            bounce_threshold_velocity = 0.1  # [m/s]
+            max_depenetration_velocity = 1.0
+            max_gpu_contact_pairs = 2**23  # 2**24 -> needed for 8000 envs and more
+            default_buffer_size_multiplier = 5
+            # 0: never, 1: last sub-step, 2: all sub-steps (default=2)
+            contact_collection = 2
     class asset(LeggedRobotCfg.asset):
         file = '{LEGGED_GYM_ROOT_DIR}'\
             '/resources/robots/orcai_description/urdf/orca_description_mj.urdf'
@@ -232,7 +249,7 @@ class test_config(LeggedRobotCfg):
 
     class rewards(LeggedRobotCfg.rewards):
         # ! "Incorrect" specification of height
-        base_height_target = 0.7
+        base_height_target = 0.65
         # base_height_target = 2.0
         soft_dof_pos_limit = 0.9
         soft_dof_vel_limit = 0.9
@@ -242,7 +259,7 @@ class test_config(LeggedRobotCfg):
         target_feet_height = 0.15        # m
         cycle_time = 1.0                # sec
         # negative total rewards clipped at zero (avoids early termination)
-        only_positive_rewards = False
+        only_positive_rewards = True
         tracking_sigma = 0.5
 
         class scales(LeggedRobotCfg.rewards.scales):
@@ -291,7 +308,7 @@ class test_config(LeggedRobotCfg):
 
             # Sweep values: [0.1, 0.5, 2.0, 5.0, 10.]
             # Default: 1.0
-            joint_regularization = 1.0
+            joint_regularization = 4.0
             ankle_regularization = 1.0
             # * PBRS rewards * #
             # Sweep values: [0.1, 0.5, 2.0, 5.0, 10.]
@@ -311,13 +328,18 @@ class test_config(LeggedRobotCfg):
 
     class normalization(LeggedRobotCfg.normalization):
         class obs_scales(LeggedRobotCfg.normalization.obs_scales):
-            base_z = 1./0.6565
+            base_z = 1.
+            lin_vel = 2.
+            ang_vel = 1.
+            dof_pos = 1.
+            dof_vel = 0.05
+            quat = 1.
 
         clip_observations = 100.
         clip_actions = 10.
 
     class noise(LeggedRobotCfg.noise):
-        add_noise = True
+        add_noise = False
         noise_level = 1.0  # scales other values
 
         class noise_scales(LeggedRobotCfg.noise.noise_scales):

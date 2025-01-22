@@ -125,16 +125,16 @@ def run_mujoco(policy, cfg):
             eu_ang = quaternion_to_euler_array(quat)
             eu_ang[eu_ang > math.pi] -= 2 * math.pi
 
-            obs[0, 0] = math.sin(2 * math.pi * count_lowlevel * cfg.sim_config.dt  / 0.64)
-            obs[0, 1] = math.cos(2 * math.pi * count_lowlevel * cfg.sim_config.dt  / 0.64)
+            obs[0, 0] = math.sin(2 * math.pi * count_lowlevel * cfg.sim_config.dt  / 1.0)
+            obs[0, 1] = math.cos(2 * math.pi * count_lowlevel * cfg.sim_config.dt  / 1.0)
             obs[0, 2] = cmd.vx * cfg.normalization.obs_scales.lin_vel
             obs[0, 3] = cmd.vy * cfg.normalization.obs_scales.lin_vel
             obs[0, 4] = cmd.dyaw * cfg.normalization.obs_scales.ang_vel
-            obs[0, 5:17] = q * cfg.normalization.obs_scales.dof_pos
-            obs[0, 17:29] = dq * cfg.normalization.obs_scales.dof_vel
-            obs[0, 29:41] = action
-            obs[0, 41:44] = omega
-            obs[0, 44:47] = eu_ang
+            obs[0, 5:19] = q * cfg.normalization.obs_scales.dof_pos
+            obs[0, 19:33] = dq * cfg.normalization.obs_scales.dof_vel
+            obs[0, 33:47] = action
+            obs[0, 47:50] = omega
+            obs[0, 50:53] = eu_ang
 
             obs = np.clip(obs, -cfg.normalization.clip_observations, cfg.normalization.clip_observations)
 
@@ -177,18 +177,18 @@ if __name__ == '__main__':
 
         class sim_config:
             if args.terrain:
-                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/orcai_description/mjcf/scene.xml'
+                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/orcai_description/mjcf/scene_14dof.xml'
             else:
-                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/orcai_description/mjcf/scene.xml'
+                mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/orcai_description/mjcf/scene_14dof.xml'
                 # mujoco_model_path = f'{LEGGED_GYM_ROOT_DIR}/resources/robots/XBot/mjcf/XBot-L.xml'
             sim_duration = 60.0
             dt = 0.001
             decimation = 20
 
         class robot_config:
-            kps = np.array([50, 75, 50, 75, 30, 15, 50, 75, 50, 75, 30, 15], dtype=np.double)
-            kds = np.array([3, 6, 3, 6, 2, 1, 3, 6, 3, 6, 2, 1], dtype=np.double)
-            tau_limit = 200. * np.ones(12, dtype=np.double)
+            kps = np.array([50, 75, 50, 75, 30, 15, 50, 75, 50, 75, 30, 15, 75, 75], dtype=np.double)
+            kds = np.array([3, 6, 3, 6, 2, 1, 3, 6, 3, 6, 2, 1, 3. ,3.], dtype=np.double)
+            tau_limit = 200. * np.ones(14, dtype=np.double)
 
     policy = torch.jit.load(args.load_model)
     run_mujoco(policy, Sim2simCfg())

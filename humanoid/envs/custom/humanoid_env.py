@@ -126,16 +126,19 @@ class XBotLFreeEnv(LeggedRobot):
         self.ref_dof_pos = torch.zeros_like(self.dof_pos)
         scale_1 = self.cfg.rewards.target_joint_pos_scale
         scale_2 = 2 * scale_1
+        self.ref_dof_pos[:, 12] = sin_pos_l * scale_1
         # left foot stance phase set to default joint pos
         sin_pos_l[sin_pos_l > 0] = 0
-        self.ref_dof_pos[:, 0] = sin_pos_l * scale_1
-        self.ref_dof_pos[:, 3] = sin_pos_l * scale_2
-        self.ref_dof_pos[:, 4] = -sin_pos_l * scale_1
+        self.ref_dof_pos[:, 6] = sin_pos_l * scale_1
+        self.ref_dof_pos[:, 9] = sin_pos_l * scale_2
+        self.ref_dof_pos[:, 10] = -sin_pos_l * scale_1
         # right foot stance phase set to default joint pos
+        self.ref_dof_pos[:, 13] = sin_pos_r * scale_1
         sin_pos_r[sin_pos_r < 0] = 0
-        self.ref_dof_pos[:, 6] = -sin_pos_r * scale_1
-        self.ref_dof_pos[:, 9] = -sin_pos_r * scale_2
-        self.ref_dof_pos[:, 10] = sin_pos_r * scale_1
+        self.ref_dof_pos[:, 0] = -sin_pos_r * scale_1
+        self.ref_dof_pos[:, 3] = -sin_pos_r * scale_2
+        self.ref_dof_pos[:, 4] = sin_pos_r * scale_1
+        
         # Double support phase
         self.ref_dof_pos[torch.abs(sin_pos) < 0.1] = 0
 
@@ -178,11 +181,11 @@ class XBotLFreeEnv(LeggedRobot):
         self.add_noise = self.cfg.noise.add_noise
         noise_scales = self.cfg.noise.noise_scales
         noise_vec[0: 5] = 0.  # commands
-        noise_vec[5: 17] = noise_scales.dof_pos * self.obs_scales.dof_pos
-        noise_vec[17: 29] = noise_scales.dof_vel * self.obs_scales.dof_vel
-        noise_vec[29: 41] = 0.  # previous actions
-        noise_vec[41: 44] = noise_scales.ang_vel * self.obs_scales.ang_vel   # ang vel
-        noise_vec[44: 47] = noise_scales.quat * self.obs_scales.quat         # euler x,y
+        noise_vec[5: 19] = noise_scales.dof_pos * self.obs_scales.dof_pos
+        noise_vec[19: 33] = noise_scales.dof_vel * self.obs_scales.dof_vel
+        noise_vec[33: 47] = 0.  # previous actions
+        noise_vec[47: 50] = noise_scales.ang_vel * self.obs_scales.ang_vel   # ang vel
+        noise_vec[50: 53] = noise_scales.quat * self.obs_scales.quat         # euler x,y
         return noise_vec
 
 
@@ -219,10 +222,10 @@ class XBotLFreeEnv(LeggedRobot):
         self.privileged_obs_buf = torch.cat((
             self.command_input,  # 2 + 3
             (self.dof_pos - self.default_joint_pd_target) * \
-            self.obs_scales.dof_pos,  # 12
-            self.dof_vel * self.obs_scales.dof_vel,  # 12
-            self.actions,  # 12
-            diff,  # 12
+            self.obs_scales.dof_pos,  # 14
+            self.dof_vel * self.obs_scales.dof_vel,  # 14
+            self.actions,  # 14
+            diff,  # 14
             self.base_lin_vel * self.obs_scales.lin_vel,  # 3
             self.base_ang_vel * self.obs_scales.ang_vel,  # 3
             self.base_euler_xyz * self.obs_scales.quat,  # 3
@@ -236,9 +239,9 @@ class XBotLFreeEnv(LeggedRobot):
 
         obs_buf = torch.cat((
             self.command_input,  # 5 = 2D(sin cos) + 3D(vel_x, vel_y, aug_vel_yaw)
-            q,    # 12D
-            dq,  # 12D
-            self.actions,   # 12D
+            q,    # 14D
+            dq,  # 14D
+            self.actions,   # 14D
             self.base_ang_vel * self.obs_scales.ang_vel,  # 3
             self.base_euler_xyz * self.obs_scales.quat,  # 3
         ), dim=-1)
@@ -365,8 +368,9 @@ class XBotLFreeEnv(LeggedRobot):
         on penalizing deviation in yaw and roll directions. Excludes yaw and roll from the main penalty.
         """
         joint_diff = self.dof_pos - self.default_joint_pd_target
-        left_yaw_roll = joint_diff[:, 1: 3]
-        right_yaw_roll = joint_diff[:, 7: 9]
+        left_yaw_roll = joint_diff[:, 7: 9]
+        right_yaw_roll = joint_diff[:, 1: 3]
+        arm = joint_diff[:, 12:14]
         yaw_roll = torch.norm(left_yaw_roll, dim=1) + torch.norm(right_yaw_roll, dim=1)
         yaw_roll = torch.clamp(yaw_roll - 0.1, 0, 50)
         return torch.exp(-yaw_roll * 100) - 0.01 * torch.norm(joint_diff, dim=1)

@@ -1,3 +1,6 @@
 Sat Jan 18 20:04:42 2025
 WARNING: mju_openResource: unknown file '/home/liqi/humanoid-gym/resources/robots/orcai_description/mjcf//home/liqi/humanoid-gym/resources/robots/orcai_description/mjcf/mjmodel.xml'
 
+Sun Jan 19 19:26:18 2025
+WARNING: mju_openResource: unknown file '/home/liqi/humanoid-gym/resources/robots/orcai_description/mjcf/orca_description_14dof.xml'
+
