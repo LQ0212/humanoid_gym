@@ -127,17 +127,17 @@ class XBotLFreeEnv(LeggedRobot):
         scale_1 = self.cfg.rewards.target_joint_pos_scale
         scale_2 = 2 * scale_1
         # left foot stance phase set to default joint pos
+        self.ref_dof_pos[:, 12] = -sin_pos_l * scale_1
         sin_pos_l[sin_pos_l > 0] = 0
-        self.ref_dof_pos[:, 12] = sin_pos_l * scale_1
-        self.ref_dof_pos[:, 6] = sin_pos_l * scale_1
-        self.ref_dof_pos[:, 9] = sin_pos_l * scale_2
-        self.ref_dof_pos[:, 10] = -sin_pos_l * scale_1
+        self.ref_dof_pos[:, 0] = sin_pos_l * scale_1
+        self.ref_dof_pos[:, 3] = sin_pos_l * scale_2
+        self.ref_dof_pos[:, 4] = -sin_pos_l * scale_1
         # right foot stance phase set to default joint pos
-        sin_pos_r[sin_pos_r < 0] = 0
         self.ref_dof_pos[:, 13] = sin_pos_r * scale_1
-        self.ref_dof_pos[:, 0] = -sin_pos_r * scale_1
-        self.ref_dof_pos[:, 3] = -sin_pos_r * scale_2
-        self.ref_dof_pos[:, 4] = sin_pos_r * scale_1
+        sin_pos_r[sin_pos_r < 0] = 0
+        self.ref_dof_pos[:, 6] = -sin_pos_r * scale_1
+        self.ref_dof_pos[:, 9] = -sin_pos_r * scale_2
+        self.ref_dof_pos[:, 10] = sin_pos_r * scale_1
         
         # Double support phase
         self.ref_dof_pos[torch.abs(sin_pos) < 0.1] = 0

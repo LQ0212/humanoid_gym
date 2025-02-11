@@ -82,16 +82,19 @@ for i in range(10000):
     sin_pos_l = sin_pos.copy()
     sin_pos_r = sin_pos.copy()
  
-    ref_dof_pos = np.zeros((1,12))
+    ref_dof_pos = np.zeros((1,14))
     scale_1 = 0.50
     scale_2 = 2 * scale_1
     # left foot stance phase set to default joint pos
+    ref_dof_pos[:, 12] = -sin_pos_l * scale_1
     if sin_pos_l > 0 :
         sin_pos_l = sin_pos_l * 0
     ref_dof_pos[:, 0] = sin_pos_l * scale_1
     ref_dof_pos[:, 3] = sin_pos_l * scale_2
     ref_dof_pos[:, 4] = -sin_pos_l * scale_1
+
     # right foot stance phase set to default joint pos
+    ref_dof_pos[:, 13] = sin_pos_r * scale_1
     if sin_pos_r < 0:
         sin_pos_r = sin_pos_r * 0
     ref_dof_pos[:, 6] = -sin_pos_r * scale_1

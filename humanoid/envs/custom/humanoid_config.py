@@ -172,18 +172,18 @@ class XBotLCfg(LeggedRobotCfg):
         heading_command = True  # if true: compute ang vel command from heading error
 
         class ranges:
-            lin_vel_x = [-1.0, 1.0]   # min max [m/s]
-            lin_vel_y = [-0.6, 0.6]   # min max [m/s]
+            lin_vel_x = [0.5, 1.0]   # min max [m/s]
+            lin_vel_y = [0.3, 0.6]   # min max [m/s]
             ang_vel_yaw = [-0.6, 0.6] # min max [rad/s]
             heading = [-3.14, 3.14]
 
     class rewards:
-        base_height_target = 0.78
+        base_height_target = 0.74
         min_dist = 0.1
-        max_dist = 0.6
+        max_dist = 0.5
         # put some settings here for LLM parameter tuning
-        target_joint_pos_scale = 0.3    # rad
-        target_feet_height = 0.1        # m
+        target_joint_pos_scale = 0.5    # rad
+        target_feet_height = 0.06        # m
         cycle_time = 0.8                # sec
         # if true negative total rewards are clipped at zero (avoids early termination problems)
         only_positive_rewards = False
@@ -199,8 +199,8 @@ class XBotLCfg(LeggedRobotCfg):
             # gait
             feet_air_time = 2.
             foot_slip = -0.1
-            feet_distance = 0.2
-            knee_distance = 0.2
+            # feet_distance = 0.2
+            # knee_distance = 0.2
             # contact
             feet_contact_forces = -0.01
             # vel tracking
