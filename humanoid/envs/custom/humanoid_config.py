@@ -98,7 +98,7 @@ class XBotLCfg(LeggedRobotCfg):
             height_measurements = 0.1
 
     class init_state(LeggedRobotCfg.init_state):
-        pos = [0.0, 0.0, 0.70]
+        pos = [0.0, 0.0, 0.80]
 
         default_joint_angles = {  # = target angles [rad] when action = 0.0
 
@@ -178,7 +178,7 @@ class XBotLCfg(LeggedRobotCfg):
             heading = [-3.14, 3.14]
 
     class rewards:
-        base_height_target = 0.70
+        base_height_target = 0.78
         min_dist = 0.1
         max_dist = 0.6
         # put some settings here for LLM parameter tuning
@@ -208,7 +208,7 @@ class XBotLCfg(LeggedRobotCfg):
             tracking_ang_vel = 1.5
             vel_mismatch_exp = 0.5  # lin_z; ang x,y
             low_speed = 0.2
-            track_vel_hard = 2
+            track_vel_hard = 2.
             # base pos
             default_joint_pos = 1.
             orientation = 1.
