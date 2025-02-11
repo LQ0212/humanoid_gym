@@ -126,15 +126,15 @@ class XBotLFreeEnv(LeggedRobot):
         self.ref_dof_pos = torch.zeros_like(self.dof_pos)
         scale_1 = self.cfg.rewards.target_joint_pos_scale
         scale_2 = 2 * scale_1
-        self.ref_dof_pos[:, 12] = sin_pos_l * scale_1
         # left foot stance phase set to default joint pos
         sin_pos_l[sin_pos_l > 0] = 0
+        self.ref_dof_pos[:, 12] = sin_pos_l * scale_1
         self.ref_dof_pos[:, 6] = sin_pos_l * scale_1
         self.ref_dof_pos[:, 9] = sin_pos_l * scale_2
         self.ref_dof_pos[:, 10] = -sin_pos_l * scale_1
         # right foot stance phase set to default joint pos
-        self.ref_dof_pos[:, 13] = sin_pos_r * scale_1
         sin_pos_r[sin_pos_r < 0] = 0
+        self.ref_dof_pos[:, 13] = sin_pos_r * scale_1
         self.ref_dof_pos[:, 0] = -sin_pos_r * scale_1
         self.ref_dof_pos[:, 3] = -sin_pos_r * scale_2
         self.ref_dof_pos[:, 4] = sin_pos_r * scale_1
@@ -370,7 +370,7 @@ class XBotLFreeEnv(LeggedRobot):
         joint_diff = self.dof_pos - self.default_joint_pd_target
         left_yaw_roll = joint_diff[:, 7: 9]
         right_yaw_roll = joint_diff[:, 1: 3]
-        arm = joint_diff[:, 12:14]
+        # arm = joint_diff[:, 12:14]
         yaw_roll = torch.norm(left_yaw_roll, dim=1) + torch.norm(right_yaw_roll, dim=1)
         yaw_roll = torch.clamp(yaw_roll - 0.1, 0, 50)
         return torch.exp(-yaw_roll * 100) - 0.01 * torch.norm(joint_diff, dim=1)
@@ -381,11 +381,11 @@ class XBotLFreeEnv(LeggedRobot):
         The reward is computed based on the height difference between the robot's base and the average height 
         of its feet when they are in contact with the ground.
         """
-        stance_mask = self._get_gait_phase()
-        measured_heights = torch.sum(
-            self.rigid_state[:, self.feet_indices, 2] * stance_mask, dim=1) / torch.sum(stance_mask, dim=1)
-        base_height = self.root_states[:, 2] - (measured_heights - 0.05)
-        return torch.exp(-torch.abs(base_height - self.cfg.rewards.base_height_target) * 100)
+        # stance_mask = self._get_gait_phase()
+        # measured_heights = torch.sum(
+        #     self.rigid_state[:, self.feet_indices, 2] * stance_mask, dim=1) / torch.sum(stance_mask, dim=1)
+        base_height = self.root_states[:, 2]
+        return torch.exp(-torch.abs(base_height - self.cfg.rewards.base_height_target) * 10)
 
     def _reward_base_acc(self):
         """

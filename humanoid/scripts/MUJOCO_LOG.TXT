@@ -4,3 +4,6 @@ WARNING: mju_openResource: unknown file '/home/liqi/humanoid-gym/resources/robot
 Sun Jan 19 19:26:18 2025
 WARNING: mju_openResource: unknown file '/home/liqi/humanoid-gym/resources/robots/orcai_description/mjcf/orca_description_14dof.xml'
 
+Mon Feb 10 14:56:07 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 6. The simulation is unstable. Time = 0.9310.
+

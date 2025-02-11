@@ -168,8 +168,8 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(description='Deployment script.')
-    parser.add_argument('--load_model', type=str, required=True,
-                        help='Run to load from.')
+    # parser.add_argument('--load_model', type=str, required=True,
+                        # help='Run to load from.')
     parser.add_argument('--terrain', action='store_true', help='terrain or plane')
     args = parser.parse_args()
 
@@ -188,7 +188,7 @@ if __name__ == '__main__':
         class robot_config:
             kps = np.array([50, 75, 50, 75, 30, 15, 50, 75, 50, 75, 30, 15, 75, 75], dtype=np.double)
             kds = np.array([3, 6, 3, 6, 2, 1, 3, 6, 3, 6, 2, 1, 3. ,3.], dtype=np.double)
-            tau_limit = 200. * np.ones(14, dtype=np.double)
+            tau_limit = 1200. * np.ones(14, dtype=np.double)
 
-    policy = torch.jit.load(args.load_model)
+    policy = torch.jit.load("/home/liqi/humanoid-gym/logs/XBot_ppo/exported/policies/policy_1.pt")
     run_mujoco(policy, Sim2simCfg())

@@ -86,7 +86,7 @@ class XBotLCfg(LeggedRobotCfg):
         restitution = 0.
 
     class noise:
-        add_noise = False
+        add_noise = True
         noise_level = 0.6    # scales other values
 
         class noise_scales:
@@ -98,22 +98,22 @@ class XBotLCfg(LeggedRobotCfg):
             height_measurements = 0.1
 
     class init_state(LeggedRobotCfg.init_state):
-        pos = [0.0, 0.0, 0.68]
+        pos = [0.0, 0.0, 0.70]
 
         default_joint_angles = {  # = target angles [rad] when action = 0.0
 
-            'r_hip_pitch_joint': -0.3,
+            'r_hip_pitch_joint': -0.0,
             'r_hip_roll_joint': 0.0,
             'r_hip_yaw_joint': 0.0,
-            'r_knee_joint': -0.6,
-            'r_ankle_pitch_joint': 0.3,
+            'r_knee_joint': -0.0,
+            'r_ankle_pitch_joint': 0.0,
             'r_ankle_roll_joint': 0.0,
             
-            'l_hip_pitch_joint': -0.3,
+            'l_hip_pitch_joint': -0.0,
             'l_hip_roll_joint': 0.0,
             'l_hip_yaw_joint': 0.0,
-            'l_knee_joint': -0.6,
-            'l_ankle_pitch_joint': 0.3,
+            'l_knee_joint': -0.0,
+            'l_ankle_pitch_joint': 0.0,
             'l_ankle_roll_joint': 0.0,
             
             'rarm_joint1': 0.0,
@@ -178,37 +178,37 @@ class XBotLCfg(LeggedRobotCfg):
             heading = [-3.14, 3.14]
 
     class rewards:
-        base_height_target = 0.68
+        base_height_target = 0.70
         min_dist = 0.1
-        max_dist = 0.4
+        max_dist = 0.6
         # put some settings here for LLM parameter tuning
         target_joint_pos_scale = 0.3    # rad
         target_feet_height = 0.1        # m
-        cycle_time = 0.5                # sec
+        cycle_time = 0.8                # sec
         # if true negative total rewards are clipped at zero (avoids early termination problems)
-        only_positive_rewards = True
+        only_positive_rewards = False
         # tracking reward = exp(error*sigma)
         tracking_sigma = 5
-        max_contact_force = 1000. # Forces above this value are penalized
+        max_contact_force = 1500. # Forces above this value are penalized
 
         class scales:
             # reference motion tracking
             joint_pos = 1.6
             feet_clearance = 1.
-            feet_contact_number = 1.2
+            feet_contact_number = 0.5
             # gait
-            feet_air_time = 1.
+            feet_air_time = 2.
             foot_slip = -0.1
             feet_distance = 0.2
             knee_distance = 0.2
             # contact
             feet_contact_forces = -0.01
             # vel tracking
-            tracking_lin_vel = 2.
+            tracking_lin_vel = 4.
             tracking_ang_vel = 1.5
             vel_mismatch_exp = 0.5  # lin_z; ang x,y
             low_speed = 0.2
-            track_vel_hard = 0.5
+            track_vel_hard = 2
             # base pos
             default_joint_pos = 1.
             orientation = 1.
@@ -245,16 +245,16 @@ class XBotLCfgPPO(LeggedRobotCfgPPO):
     class algorithm(LeggedRobotCfgPPO.algorithm):
         entropy_coef = 0.001
         learning_rate = 1e-5
-        num_learning_epochs = 2
-        gamma = 0.994
-        lam = 0.9
+        num_learning_epochs = 4
+        gamma = 0.99
+        lam = 0.95
         num_mini_batches = 4
 
     class runner:
         policy_class_name = 'ActorCritic'
         algorithm_class_name = 'PPO'
         num_steps_per_env =60  # per iteration
-        max_iterations = 20000  # number of policy updates
+        max_iterations = 3000  # number of policy updates
 
         # logging
         save_interval = 100  # Please check for potential savings every `save_interval` iterations.
